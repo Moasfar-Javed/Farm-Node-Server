@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const baseUrl = "/api/v1";
+const baseUrl = "/api/v1/farm";
 
 app.use(baseUrl, userRoutes);
 app.use(baseUrl, cropRoutes);
