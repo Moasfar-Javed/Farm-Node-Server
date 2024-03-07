@@ -17,6 +17,9 @@ const databaseConfig = {
     usersDatabase: process.env.USER_DB,
     cropsDatabase: process.env.CROP_DB,
     notificationsDatabase: process.env.NOTIFICATION_DB,
+    hardwaresDatabase: process.env.SENSOR_DB,
+    readingsDatabase: process.env.READING_DB,
+    irrigationsDatabase: process.env.IRRIGATION_DB,
   },
 };
 

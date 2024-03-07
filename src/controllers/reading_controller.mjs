@@ -1,20 +1,15 @@
-import NotificationService from "../services/notification_service.mjs";
+import ReadingService from "../services/reading_service.mjs";
 import TokenUtil from "../utility/token_util.mjs";
 
-export default class NotificationController {
-  static async apiSendNotification(req, res, next) {
+export default class ReadingController {
+  static async apiAddReading(req, res, next) {
     try {
-      const { action, id, title, message } = req.body;
+      const { sensor_id, moisture, ph } = req.body;
 
-      const token = TokenUtil.cleanToken(req.headers["authorization"]);
-      const user = await UserService.getUserFromToken(token);
-
-      const serviceResponse = await NotificationService.sendNotification(
-        user,
-        action,
-        id,
-        title,
-        message
+      const serviceResponse = await ReadingService.addReading(
+        sensor_id,
+        moisture,
+        ph
       );
       if (typeof serviceResponse === "string") {
         res
@@ -24,7 +19,7 @@ export default class NotificationController {
         res.status(200).json({
           success: true,
           data: serviceResponse,
-          message: "Notification sent to the device",
+          message: "",
         });
       }
     } catch (e) {
@@ -32,13 +27,13 @@ export default class NotificationController {
     }
   }
 
-  static async apiListNotifications(req, res, next) {
+  static async apiListReading(req, res, next) {
     try {
+      let { name } = req.query;
+      name = decodeURIComponent(name);
       const token = TokenUtil.cleanToken(req.headers["authorization"]);
 
-      const serviceResponse = await NotificationService.listNotifications(
-        token
-      );
+      const serviceResponse = await ReadingService.listReadings(token, name);
       if (typeof serviceResponse === "string") {
         res
           .status(200)

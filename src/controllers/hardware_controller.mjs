@@ -1,15 +1,36 @@
-import UserService from "../services/user_service.mjs";
+import HardwareService from "../services/hardware_service.mjs";
 import TokenUtil from "../utility/token_util.mjs";
 
-export default class UserController {
-  static async apiGetOrCreateUserAccount(req, res, next) {
+export default class HardwareController {
+  static async apiAddSensor(req, res, next) {
     try {
-      const { fire_uid, phone_or_email, fcm_token } = req.body;
+      const serviceResponse = await HardwareService.addSensor();
+      if (typeof serviceResponse === "string") {
+        res
+          .status(200)
+          .json({ success: false, data: {}, message: serviceResponse });
+      } else {
+        res.status(200).json({
+          success: true,
+          data: serviceResponse,
+          message: "",
+        });
+      }
+    } catch (e) {
+      res.status(500).json({ success: false, data: {}, message: e.message });
+    }
+  }
 
-      const serviceResponse = await UserService.getOrAddUser(
-        fire_uid,
-        phone_or_email,
-        fcm_token
+  static async apiAssociateSensor(req, res, next) {
+    try {
+      let { id, name } = req.query;
+      name = decodeURIComponent(name);
+      const token = TokenUtil.cleanToken(req.headers["authorization"]);
+
+      const serviceResponse = await HardwareService.associateSensor(
+        token,
+        id.toUpperCase(),
+        name
       );
       if (typeof serviceResponse === "string") {
         res
@@ -19,7 +40,7 @@ export default class UserController {
         res.status(200).json({
           success: true,
           data: serviceResponse,
-          message: "",
+          message: "Hardware paired successfully",
         });
       }
     } catch (e) {
@@ -27,10 +48,17 @@ export default class UserController {
     }
   }
 
-  static async apiGetUserDetail(req, res, next) {
+  static async apiDisassociateSensor(req, res, next) {
     try {
+      let { id, name } = req.query;
+      name = decodeURIComponent(name);
       const token = TokenUtil.cleanToken(req.headers["authorization"]);
-      const serviceResponse = await UserService.getUserDetails(token);
+
+      const serviceResponse = await HardwareService.disassociateSensor(
+        token,
+        id.toUpperCase(),
+        name
+      );
       if (typeof serviceResponse === "string") {
         res
           .status(200)
@@ -39,27 +67,7 @@ export default class UserController {
         res.status(200).json({
           success: true,
           data: serviceResponse,
-          message: "",
-        });
-      }
-    } catch (e) {
-      res.status(500).json({ success: false, data: {}, message: e.message });
-    }
-  }
-
-  static async apiSignOutUser(req, res, next) {
-    try {
-      const token = TokenUtil.cleanToken(req.headers["authorization"]);
-      const serviceResponse = await UserService.signOutUser(token);
-      if (typeof serviceResponse === "string") {
-        res
-          .status(200)
-          .json({ success: false, data: {}, message: serviceResponse });
-      } else {
-        res.status(200).json({
-          success: true,
-          data: serviceResponse,
-          message: "User signed out successfully",
+          message: "Hardware unpaired successfully",
         });
       }
     } catch (e) {

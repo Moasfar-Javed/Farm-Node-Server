@@ -22,7 +22,6 @@ class FirebaseUtility {
         token: token,
       });
 
-      console.log("Notification sent successfully:", response);
       return response;
     } catch (error) {
       console.error("Error sending notification:", error);

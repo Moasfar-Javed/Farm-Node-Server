@@ -30,11 +30,11 @@ export default class UserDAO {
     }
   }
 
-  static async updateUserFieldByID(id, fieldName, newValue) {
+  static async updateUserFieldByID(id, fieldsToUpdate) {
     try {
       const user = await usercon.findOneAndUpdate(
         { _id: id },
-        { $set: { [fieldName]: newValue } },
+        { $set: fieldsToUpdate },
         { new: true }
       );
       return user;

@@ -26,4 +26,29 @@ router
   .route(baseRoute + "/list")
   .get(checkTokenMiddleware, CropController.apiListCrops);
 
+router
+  .route(baseRoute + "/remove")
+  .delete(
+    checkRequiredFieldsMiddleware(["name"]),
+    checkTokenMiddleware,
+    CropController.apiDeleteCrop
+  );
+
+router
+  .route(baseRoute + "/update")
+  .put(
+    checkRequiredFieldsMiddleware(
+      ["name"],
+      [
+        "title",
+        "preferred_release_duration",
+        "preferred_release_time",
+        "automatic_irrigation",
+        "maintain_logs",
+      ]
+    ),
+    checkTokenMiddleware,
+    CropController.apiUpdateCrop
+  );
+
 export default router;

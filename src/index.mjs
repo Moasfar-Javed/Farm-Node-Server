@@ -6,6 +6,9 @@ import UserService from "./services/user_service.mjs";
 import CropService from "./services/crop_service.mjs";
 import FirebaseUtility from "./utility/fcm_utility.mjs";
 import NotificationService from "./services/notification_service.mjs";
+import HardwareService from "./services/hardware_service.mjs";
+import ReadingService from "./services/reading_service.mjs";
+import IrrigationService from "./services/irrigation_service.mjs";
 
 // Uncomment to enable https
 
@@ -40,6 +43,9 @@ MongoClient.connect(uri, {
     await UserService.connectDatabase(client);
     await CropService.connectDatabase(client);
     await NotificationService.connectDatabase(client);
+    await HardwareService.connectDatabase(client);
+    await ReadingService.connectDatabase(client);
+    await IrrigationService.connectDatabase(client);
     FirebaseUtility.initializeApp();
     // const httpsServer = https.createServer(cred, app);
     // httpsServer.listen(port, () => {
