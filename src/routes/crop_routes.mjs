@@ -27,6 +27,10 @@ router
   .get(checkTokenMiddleware, CropController.apiListCrops);
 
 router
+  .route(baseRoute + "/types")
+  .get(checkTokenMiddleware, CropController.apiListCropTypes);
+
+router
   .route(baseRoute + "/remove")
   .delete(
     checkRequiredFieldsMiddleware(["name"]),

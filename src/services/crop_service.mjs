@@ -73,6 +73,34 @@ export default class CropService {
     }
   }
 
+  static listCropTypes() {
+    try {
+      return { crop_types: this._getCropsTypes() };
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  static _getCropsTypes() {
+    return [
+      "banana",
+      "soyabean",
+      "cabbage",
+      "potato",
+      "rice",
+      "melon",
+      "maize",
+      "citrus",
+      "bean",
+      "wheat",
+      "musturd",
+      "cotton",
+      "sugarcane",
+      "tomato",
+      "onion",
+    ];
+  }
+
   static async listCropsWithWeather(user_id) {
     try {
       const [crops, weather] = await Promise.all([
