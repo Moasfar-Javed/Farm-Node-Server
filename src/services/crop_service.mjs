@@ -16,12 +16,17 @@ export default class CropService {
   static async addCrop(
     user_id,
     title,
+    type,
     preferred_release_duration,
     preferred_release_time,
     automatic_irrigation,
     maintain_logs
   ) {
     try {
+      const typeExists = this._getCropsTypes().includes(type);
+      if (!typeExists) {
+        return "Invalid crop type";
+      }
       const existingCrop = await this.getCropByUserIdAndTitle(user_id, title);
 
       if (existingCrop) {
@@ -33,6 +38,7 @@ export default class CropService {
       const cropDocument = {
         user_id: user_id,
         title: title,
+        type: type,
         preferred_release_duration: preferred_release_duration,
         preferred_release_time: preferred_release_time,
         automatic_irrigation: automatic_irrigation,

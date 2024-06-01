@@ -6,6 +6,7 @@ export default class CropController {
     try {
       const {
         title,
+        type,
         preferred_release_duration,
         preferred_release_time,
         automatic_irrigation,
@@ -19,6 +20,7 @@ export default class CropController {
       const serviceResponse = await CropService.addCrop(
         user._id,
         title,
+        type,
         preferred_release_duration,
         preferred_release_time,
         automatic_irrigation,

@@ -13,6 +13,7 @@ router
   .post(
     checkRequiredFieldsMiddleware([
       "title",
+      "type",
       "preferred_release_duration",
       "preferred_release_time",
       "automatic_irrigation",
