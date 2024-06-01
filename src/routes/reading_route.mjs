@@ -10,7 +10,7 @@ const baseRoute = "/reading";
 //api routes
 
 router.route(baseRoute + "/upload").post(
-  checkRequiredFieldsMiddleware(["sensor_id", "moisture", "ph"]),
+  checkRequiredFieldsMiddleware(["sensor_id", "moisture"]),
 
   ReadingController.apiAddReading
 );

@@ -29,7 +29,6 @@ export default class ReadingService {
         sensor_id: sensorId,
         crop_id: sensor.crop_id,
         moisture: moisture,
-        pH: ph,
         created_on: createdOn,
         deleted_on: deletedOn,
       };

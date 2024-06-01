@@ -4,12 +4,12 @@ import TokenUtil from "../utility/token_util.mjs";
 export default class ReadingController {
   static async apiAddReading(req, res, next) {
     try {
-      const { sensor_id, moisture, ph } = req.body;
+      const { sensor_id, moisture } = req.body;
 
       const serviceResponse = await ReadingService.addReading(
         sensor_id,
         moisture,
-        ph
+        
       );
       if (typeof serviceResponse === "string") {
         res
