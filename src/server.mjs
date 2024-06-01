@@ -27,6 +27,7 @@ app.use("*", (req, res) =>
   res.status(404).json({
     success: false,
     data: {
+      url: req.originalUrl,
       status: 404,
       error: "Not Found",
     },

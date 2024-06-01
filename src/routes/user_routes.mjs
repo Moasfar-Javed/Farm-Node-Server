@@ -9,7 +9,7 @@ const baseRoute = "/user";
 
 //api routes
 router
-  .route(baseRoute + "/sign-in-or-up")
+  .route(baseRoute + "/auth")
   .post(
     checkRequiredFieldsMiddleware(["fire_uid", "phone_or_email", "fcm_token"]),
     UserController.apiGetOrCreateUserAccount

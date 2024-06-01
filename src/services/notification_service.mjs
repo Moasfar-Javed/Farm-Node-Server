@@ -15,7 +15,6 @@ export default class NotificationService {
 
   static async sendNotification(user, action, id, title, message) {
     try {
-
       const fcmResponse = await FirebaseUtility.sendNotification(
         user.fcm_token,
         id,
