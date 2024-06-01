@@ -23,17 +23,26 @@ app.use(baseUrl, readingRoutes);
 app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
 
-app.use("*", (req, res) =>
-  res.status(404).json({
-    success: false,
-    data: {
-      url: req.originalUrl,
-      status: 404,
-      error: "Not Found",
-    },
-    message:
-      "The request made can not reach the server because either the URI is incorrect or the resource have been moved to another place. Please contact the system administrator for more information",
-  })
+app.use(
+  "/.well-known/pki-validation/6D982616EA5E335D48849E7C54C29FA0.txt",
+  (req, res) => {
+    const filePath =
+      "/home/ec2-user/Farm-Node-Server/6D982616EA5E335D48849E7C54C29FA0.txt";
+    res.sendFile(filePath);
+  }
 );
+
+// app.use("*", (req, res) =>
+//   res.status(404).json({
+//     success: false,
+//     data: {
+//       url: req.originalUrl,
+//       status: 404,
+//       error: "Not Found",
+//     },
+//     message:
+//       "The request made can not reach the server because either the URI is incorrect or the resource have been moved to another place. Please contact the system administrator for more information",
+//   })
+// );
 
 export default app;
