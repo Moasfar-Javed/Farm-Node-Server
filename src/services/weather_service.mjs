@@ -1,11 +1,11 @@
 import { fetchWeatherApi } from "openmeteo";
 
 export default class WeatherService {
-  static async getWeather() {
+  static async getWeather(lat, lng) {
     try {
       const params = {
-        latitude: 52.52,
-        longitude: 13.41,
+        latitude: lat,
+        longitude: lng,
         current: ["temperature_2m", "precipitation", "weather_code", "is_day"],
         hourly: [
           "temperature_2m",

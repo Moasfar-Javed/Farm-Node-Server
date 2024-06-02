@@ -107,12 +107,18 @@ export default class CropService {
     ];
   }
 
-  static async listCropsWithWeather(user_id) {
+  static async listCropsWithWeather(user_id, lat, lng) {
     try {
-      const [crops, weather] = await Promise.all([
-        CropDAO.getCropsListFromDB(user_id),
-        WeatherService.getWeather(),
-      ]);
+      let crops;
+      let weather;
+      if (lat && lng) {
+        [crops, weather] = await Promise.all([
+          CropDAO.getCropsListFromDB(user_id),
+          WeatherService.getWeather(Number(lat), Number(lng)),
+        ]);
+      } else {
+        crops = await CropDAO.getCropsListFromDB(user_id);
+      }
 
       const cropsWithSensor = await Promise.all(
         crops.map(async (crop) => {
@@ -133,8 +139,11 @@ export default class CropService {
           return { ...filteredCrop, hardware: filteredSensor };
         })
       );
-
-      return { crops: cropsWithSensor, weather };
+      if (lat && lng) {
+        return { crops: cropsWithSensor, weather };
+      } else {
+        return { crops: cropsWithSensor, weather: null };
+      }
     } catch (e) {
       return e.message;
     }

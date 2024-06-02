@@ -45,10 +45,15 @@ export default class CropController {
   static async apiListCrops(req, res, next) {
     try {
       const token = req.headers["authorization"];
+      const { latitude, longitude } = req.query;
 
       const user = await TokenUtil.getDataFromToken(token);
 
-      const serviceResponse = await CropService.listCropsWithWeather(user._id);
+      const serviceResponse = await CropService.listCropsWithWeather(
+        user._id,
+        latitude,
+        longitude
+      );
       if (typeof serviceResponse === "string") {
         res
           .status(200)
@@ -156,6 +161,4 @@ export default class CropController {
       res.status(500).json({ success: false, data: {}, message: e.message });
     }
   }
-
-  
 }
