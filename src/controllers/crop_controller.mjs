@@ -7,7 +7,6 @@ export default class CropController {
       const {
         title,
         type,
-        preferred_release_duration,
         preferred_release_time,
         automatic_irrigation,
         maintain_logs,
@@ -21,7 +20,6 @@ export default class CropController {
         user._id,
         title,
         type,
-        preferred_release_duration,
         preferred_release_time,
         automatic_irrigation,
         maintain_logs

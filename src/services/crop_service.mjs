@@ -17,7 +17,6 @@ export default class CropService {
     user_id,
     title,
     type,
-    preferred_release_duration,
     preferred_release_time,
     automatic_irrigation,
     maintain_logs
@@ -39,7 +38,6 @@ export default class CropService {
         user_id: user_id,
         title: title,
         type: type,
-        preferred_release_duration: preferred_release_duration,
         preferred_release_time: preferred_release_time,
         automatic_irrigation: automatic_irrigation,
         maintain_logs: maintain_logs,
@@ -48,7 +46,6 @@ export default class CropService {
         next_irrigation: null,
         last_irrigation: null,
         release_duration: null,
-        optimal_irrigation_time: null,
         created_on: createdOn,
         deleted_on: deletedOn,
       };
