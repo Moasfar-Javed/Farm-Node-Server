@@ -15,7 +15,7 @@ export default class ReadingService {
     }
   }
 
-  static async addReading(sensorId, moisture, ph) {
+  static async addReading(sensorId, moisture) {
     try {
       const sensor = await HardwareService.getSensorBySensorId(sensorId);
 
@@ -36,13 +36,14 @@ export default class ReadingService {
       const addedReadingId = await ReadingDAO.addReadingToDB(readingDocument);
 
       //SENDING THE NOTIFICATION TO USER
-      const user = await UserService.getUserByID(sensor.user._id);
+      const crop = await CropService.getCropById(sensor.crop_id);
+      const user = await UserService.getUserByID(crop.user_id);
       const notification = await NotificationService.sendNotification(
         user,
         "open_logs",
         sensor.crop_id.toString(),
         "Hourly Farm Update",
-        `Your current pH levels are ${ph} and moisture is ${moisture} wfm`
+        `Your current moisture level is ${moisture} wfm`
       );
 
       const addedReading = await ReadingDAO.getReadingByIDFromDB(
