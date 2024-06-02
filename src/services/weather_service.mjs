@@ -6,13 +6,7 @@ export default class WeatherService {
       const params = {
         latitude: 52.52,
         longitude: 13.41,
-        current: [
-          "temperature_2m",
-          "is_day",
-          "precipitation",
-          "precipitation_probability",
-          "weather_code",
-        ],
+        current: ["temperature_2m", "precipitation", "weather_code", "is_day"],
         hourly: [
           "temperature_2m",
           "apparent_temperature",
@@ -52,8 +46,9 @@ export default class WeatherService {
         current: {
           time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
           temperature2m: current.variables(0).value(),
-          isDay: current.variables(1).value(),
           precipitation: current.variables(2).value(),
+          weatherCode: current.variables(4).valuesArray(),
+          isDay: current.variables(1).value(),
         },
         hourly: range(
           Number(hourly.time()),
