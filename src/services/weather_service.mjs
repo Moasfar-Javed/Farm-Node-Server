@@ -6,7 +6,13 @@ export default class WeatherService {
       const params = {
         latitude: 52.52,
         longitude: 13.41,
-        current: ["temperature_2m", "is_day", "precipitation"],
+        current: [
+          "temperature_2m",
+          "is_day",
+          "precipitation",
+          "precipitation_probability",
+          "weather_code",
+        ],
         hourly: [
           "temperature_2m",
           "apparent_temperature",

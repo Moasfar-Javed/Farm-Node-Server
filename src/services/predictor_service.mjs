@@ -17,7 +17,6 @@ export default class PredictorService {
     nextIrrigation,
     releaseDuration,
     healthStatus,
-    optimalIrrigation
   ) {
     try {
       const cropObjId = new ObjectId(cropId);
@@ -35,7 +34,6 @@ export default class PredictorService {
         crop_health_status: healthStatus,
         next_irrigation: nextIrrigation,
         release_duration: releaseDuration,
-        optimal_irrigation_time: optimalIrrigation,
       };
 
       const updatedCrop = await CropService.updateCropById(
