@@ -47,7 +47,7 @@ export default class WeatherService {
           time: new Date((Number(current.time()) + utcOffsetSeconds) * 1000),
           temperature2m: current.variables(0).value(),
           precipitation: current.variables(2).value(),
-          weatherCode: current.variables(4).valuesArray(),
+          weatherCode: current.variables(4).value(),
           isDay: current.variables(1).value(),
         },
         hourly: range(
