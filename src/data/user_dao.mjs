@@ -1,5 +1,6 @@
 import databaseConfig from "../config/database_config.mjs";
 
+
 let usercon;
 
 export default class UserDAO {

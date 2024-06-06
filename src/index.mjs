@@ -14,7 +14,6 @@ const port = appConfig.server.port;
 const username = encodeURIComponent(databaseConfig.database.username);
 const password = encodeURIComponent(databaseConfig.database.password);
 const uri = `mongodb://${username}:${password}@${databaseConfig.database.host}:${databaseConfig.database.port}/${databaseConfig.database.dbName}`;
-
 MongoClient.connect(uri, {
   maxPoolSize: 50,
   wtimeoutMS: 2500,

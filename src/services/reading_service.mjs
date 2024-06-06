@@ -43,14 +43,14 @@ export default class ReadingService {
         "open_logs",
         sensor.crop_id.toString(),
         "Hourly Farm Update",
-        `Your current moisture level is ${moisture} wfm`
+        `Your current moisture level is ${moisture}%`
       );
 
       const addedReading = await ReadingDAO.getReadingByIDFromDB(
         addedReadingId
       );
 
-      await PredictorService.requestPrediction();
+      // await PredictorService.requestPrediction();
 
       return { reading: addedReading };
     } catch (e) {

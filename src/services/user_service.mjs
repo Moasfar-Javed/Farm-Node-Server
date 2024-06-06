@@ -3,6 +3,7 @@ import TokenUtil from "../utility/token_util.mjs";
 import PatternUtil from "../utility/pattern_util.mjs";
 import HardwareService from "./hardware_service.mjs";
 import CropService from "./crop_service.mjs";
+import SchedulingUtility from "../utility/scheduling_utility.mjs";
 
 export default class UserService {
   static async connectDatabase(client) {
@@ -101,6 +102,9 @@ export default class UserService {
 
   static async getUserFromToken(authToken) {
     try {
+      // SchedulingUtility.scheduleTask("123", "17:26", () => {
+      //   console.log("Task emitted");
+      // });
       let databaseUser = await UserDAO.getUserByAuthTokenFromDB(authToken);
       return databaseUser;
     } catch (e) {
