@@ -45,8 +45,8 @@ MongoClient.connect(uri, {
       console.log(req);
       ws.on("message", (message) => {
         const data = JSON.parse(message);
-        console.log(data.arduinoId);
-        clients[data.arduinoId] = ws;
+        console.log(data.arduino_id);
+        clients[data.arduino_id] = ws;
       });
     });
 

@@ -29,8 +29,8 @@ app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
 
 app.post(baseUrl + "/arduino", (req, res) => {
-  const { arduinoId, payload } = req.body;
-  const client = clients[arduinoId];
+  const { arduino_id, payload } = req.body;
+  const client = clients[arduino_id];
   if (client && client.readyState === 1) {
     // WebSocket.OPEN is 1
     client.send(JSON.stringify({ payload }));
