@@ -1,5 +1,6 @@
 import CropDAO from "../data/crop_dao.mjs";
 import PatternUtil from "../utility/pattern_util.mjs";
+import SchedulingUtility from "../utility/scheduling_utility.mjs";
 import TokenUtil from "../utility/token_util.mjs";
 import HardwareService from "./hardware_service.mjs";
 import WeatherService from "./weather_service.mjs";
@@ -211,6 +212,16 @@ export default class CropService {
         title,
         updatedFields
       );
+
+      if (updatedFields.preferred_release_time) {
+        SchedulingUtility.rescheduleTask(
+          crop._id.toString(),
+          formattedTime,
+          () => {
+            //TODO: MAKE THE PREDICTOR REQUEST HERE
+          }
+        );
+      }
 
       const updatedCrop = await CropDAO.getCropByIDFromDB(
         updateCropResponse._id

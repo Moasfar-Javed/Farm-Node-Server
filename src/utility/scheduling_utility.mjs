@@ -47,7 +47,8 @@ class SchedulingUtility {
       .then((e) => {});
   }
 
-  async scheduleTask(id, time, task, saveToFile = true) {
+  async scheduleTask(id, date, task, saveToFile = true) {
+    const time = this.getFormatted24HourStringFromDateTime(date);
     if (this.scheduledTasks[id]) {
       this.scheduledTasks[id].cancel();
     }
@@ -82,6 +83,15 @@ class SchedulingUtility {
   rescheduleTask(id, time, task) {
     this.scheduleTask(id, time, task);
     console.log(`Task ${id} rescheduled for ${time}`);
+  }
+
+  getFormatted24HourStringFromDateTime(dateTime) {
+    const dT = new Date(dateTime);
+    const hours = dT.getHours();
+    const mins = dT.getMinutes;
+    return `${hours.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}`;
   }
 }
 

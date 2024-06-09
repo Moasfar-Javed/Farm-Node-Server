@@ -1,4 +1,4 @@
-import app from "./server.mjs";
+import { app, server, clients } from "./server.mjs";
 import { MongoClient } from "mongodb";
 import appConfig from "./config/app_config.mjs";
 import databaseConfig from "./config/database_config.mjs";
@@ -9,11 +9,14 @@ import NotificationService from "./services/notification_service.mjs";
 import HardwareService from "./services/hardware_service.mjs";
 import ReadingService from "./services/reading_service.mjs";
 import IrrigationService from "./services/irrigation_service.mjs";
+import { WebSocketServer } from "ws";
 
 const port = appConfig.server.port;
+const wsPort = 8080; // Set the WebSocket server port here
 const username = encodeURIComponent(databaseConfig.database.username);
 const password = encodeURIComponent(databaseConfig.database.password);
 const uri = `mongodb://${username}:${password}@${databaseConfig.database.host}:${databaseConfig.database.port}/${databaseConfig.database.dbName}`;
+
 MongoClient.connect(uri, {
   maxPoolSize: 50,
   wtimeoutMS: 2500,
@@ -30,7 +33,19 @@ MongoClient.connect(uri, {
     await ReadingService.connectDatabase(client);
     await IrrigationService.connectDatabase(client);
     FirebaseUtility.initializeApp();
-    app.listen(port, () => {
-      console.log(`http server running => ${port}`);
+
+    server.listen(port, () => {
+      console.log(`HTTP server running on port ${port}`);
     });
+
+    const wss = new WebSocketServer({ port: wsPort });
+
+    wss.on("connection", (ws, req) => {
+      ws.on("message", (message) => {
+        const data = JSON.parse(message);
+        clients[data.arduinoId] = ws;
+      });
+    });
+
+    console.log(`WebSocket server running on port ${wsPort}`);
   });

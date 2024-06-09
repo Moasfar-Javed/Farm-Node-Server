@@ -12,12 +12,7 @@ export default class PredictorService {
     //http://host/api/v1/predictor/predict
   }
 
-  static async handlePrediction(
-    cropId,
-    nextIrrigation,
-    releaseDuration,
-    healthStatus,
-  ) {
+  static async handlePrediction(cropId, releaseDuration, healthStatus) {
     try {
       const cropObjId = new ObjectId(cropId);
 
@@ -32,7 +27,6 @@ export default class PredictorService {
 
       const updateDocument = {
         crop_health_status: healthStatus,
-        next_irrigation: nextIrrigation,
         release_duration: releaseDuration,
       };
 
@@ -48,15 +42,10 @@ export default class PredictorService {
         "open_crop",
         cropId,
         "Irrigation Update",
-        `Your farm will be irrigated on ${nextIrrigation} for ${releaseDuration} minutes. Current health status is ${healthStatus}`
+        `Your farm will be irrigated soon for ${releaseDuration} minutes. Current health status is ${healthStatus}`
       );
 
-      this.scheduleIrrigation(
-        nextIrrigation,
-        cropObjId,
-        sensor._id,
-        releaseDuration
-      );
+      this.releaseWater(cropObjId, sensor._id, releaseDuration);
 
       return {};
     } catch (e) {
@@ -64,26 +53,11 @@ export default class PredictorService {
     }
   }
 
-  static async scheduleIrrigation(
-    nextIrrigation,
-    cropId,
-    sensorId,
-    releaseDuration
-  ) {
-    const targetDatetime = new Date(nextIrrigation);
-    const now = new Date();
-    const delay = targetDatetime.getTime() - now.getTime();
-
-    if (delay <= 0) {
-      return;
-    } else {
-      setTimeout(async () => {
-        //TODO: SEND THE NOTIFICATION OUT TO THE HARDWARE
-        //AND KEEP TRYING AFTER EVERY 5MINS
-        //TILL A VALID HANDSHAKE IS ESTABLISHED
-        //WHEN THE HANDSHAKE IS ESTABLISHED DO THIS
-        await IrrigationService.addRelease(cropId, sensorId, releaseDuration);
-      }, delay);
-    }
+  static async releaseWater(cropId, sensorId, releaseDuration) {
+    //TODO: SEND THE NOTIFICATION OUT TO THE HARDWARE
+    //AND KEEP TRYING AFTER EVERY 5MINS
+    //TILL A VALID HANDSHAKE IS ESTABLISHED
+    //WHEN THE HANDSHAKE IS ESTABLISHED DO THIS
+    await IrrigationService.addRelease(cropId, sensorId, releaseDuration);
   }
 }

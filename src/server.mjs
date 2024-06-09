@@ -7,11 +7,17 @@ import hardwareRoutes from "./routes/hardware_routes.mjs";
 import readingRoutes from "./routes/reading_route.mjs";
 import predictorRoutes from "./routes/predictor_routes.mjs";
 import irrigationRoutes from "./routes/irrigation_routes.mjs";
+import { WebSocketServer } from "ws";
+import { createServer } from "http";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const server = createServer(app); // Create the HTTP server
+
+let clients = {};
 
 const baseUrl = "/api/v1/farm";
 
@@ -23,17 +29,15 @@ app.use(baseUrl, readingRoutes);
 app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
 
-app.use("*", (req, res) =>
-  res.status(404).json({
-    success: false,
-    data: {
-      url: req.originalUrl,
-      status: 404,
-      error: "Not Found",
-    },
-    message:
-      "The request made can not reach the server because either the URI is incorrect or the resource have been moved to another place. Please contact the system administrator for more information",
-  })
-);
+app.post(baseUrl + "/arduino-payload-test", (req, res) => {
+  const { arduinoId, payload } = req.body;
+  const client = clients[arduinoId];
+  if (client && client.readyState === WebSocket.OPEN) {
+    client.send(JSON.stringify({ payload }));
+    res.status(200).send({ message: "Payload sent successfully" });
+  } else {
+    res.status(404).send({ message: "Arduino not found or not connected" });
+  }
+});
 
-export default app;
+export { app, server, clients };
