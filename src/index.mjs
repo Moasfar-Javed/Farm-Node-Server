@@ -41,8 +41,10 @@ MongoClient.connect(uri, {
     const wss = new WebSocketServer({ port: wsPort });
 
     wss.on("connection", (ws, req) => {
+      console.log("ws connected");
       ws.on("message", (message) => {
         const data = JSON.parse(message);
+        console.log(data.arduinoId);
         clients[data.arduinoId] = ws;
       });
     });

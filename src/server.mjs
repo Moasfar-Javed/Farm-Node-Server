@@ -29,7 +29,7 @@ app.use(baseUrl, readingRoutes);
 app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
 
-app.post(baseUrl + "/arduino-payload-test", (req, res) => {
+app.post(baseUrl + "/arduino", (req, res) => {
   const { arduinoId, payload } = req.body;
   const client = clients[arduinoId];
   if (client && client.readyState === WebSocket.OPEN) {
