@@ -1,4 +1,4 @@
-import { app, server, clients } from "./server.mjs";
+import { server, clients } from "./server.mjs";
 import { MongoClient } from "mongodb";
 import appConfig from "./config/app_config.mjs";
 import databaseConfig from "./config/database_config.mjs";
@@ -44,7 +44,6 @@ MongoClient.connect(uri, {
       console.log("ws connected");
       console.log(req);
       ws.on("message", (message) => {
-        console.log(message);
         const data = JSON.parse(message);
         console.log(data.arduinoId);
         clients[data.arduinoId] = ws;

@@ -7,7 +7,6 @@ import hardwareRoutes from "./routes/hardware_routes.mjs";
 import readingRoutes from "./routes/reading_route.mjs";
 import predictorRoutes from "./routes/predictor_routes.mjs";
 import irrigationRoutes from "./routes/irrigation_routes.mjs";
-import { WebSocketServer } from "ws";
 import { createServer } from "http";
 
 const app = express();
@@ -32,7 +31,8 @@ app.use(baseUrl, irrigationRoutes);
 app.post(baseUrl + "/arduino", (req, res) => {
   const { arduinoId, payload } = req.body;
   const client = clients[arduinoId];
-  if (client && client.readyState === WebSocket.OPEN) {
+  if (client && client.readyState === 1) {
+    // WebSocket.OPEN is 1
     client.send(JSON.stringify({ payload }));
     res.status(200).send({ message: "Payload sent successfully" });
   } else {
