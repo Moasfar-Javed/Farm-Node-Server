@@ -1,4 +1,4 @@
-import { server, clients } from "./server.mjs";
+import { server } from "./server.mjs";
 import { MongoClient } from "mongodb";
 import appConfig from "./config/app_config.mjs";
 import databaseConfig from "./config/database_config.mjs";
@@ -9,7 +9,7 @@ import NotificationService from "./services/notification_service.mjs";
 import HardwareService from "./services/hardware_service.mjs";
 import ReadingService from "./services/reading_service.mjs";
 import IrrigationService from "./services/irrigation_service.mjs";
-import { WebSocketServer } from "ws";
+import { initializeWebSocketServer } from "./utility/websocket_utility.mjs";
 
 const port = appConfig.server.port;
 const wsPort = 8080; // Set the WebSocket server port here
@@ -38,17 +38,5 @@ MongoClient.connect(uri, {
       console.log(`HTTP server running on port ${port}`);
     });
 
-    const wss = new WebSocketServer({ port: wsPort });
-
-    wss.on("connection", (ws, req) => {
-      console.log("ws connected");
-      console.log(req);
-      ws.on("message", (message) => {
-        const data = JSON.parse(message);
-        console.log(data.arduino_id);
-        clients[data.arduino_id] = ws;
-      });
-    });
-
-    console.log(`WebSocket server running on port ${wsPort}`);
+    initializeWebSocketServer(wsPort);
   });

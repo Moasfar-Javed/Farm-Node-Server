@@ -8,6 +8,7 @@ import readingRoutes from "./routes/reading_route.mjs";
 import predictorRoutes from "./routes/predictor_routes.mjs";
 import irrigationRoutes from "./routes/irrigation_routes.mjs";
 import { createServer } from "http";
+import { sendMessageToClient } from "./utility/websocket_utility.mjs";
 
 const app = express();
 
@@ -15,8 +16,6 @@ app.use(cors());
 app.use(express.json());
 
 const server = createServer(app); // Create the HTTP server
-
-let clients = {};
 
 const baseUrl = "/api/v1/farm";
 
@@ -30,14 +29,8 @@ app.use(baseUrl, irrigationRoutes);
 
 app.post(baseUrl + "/arduino", (req, res) => {
   const { arduino_id, payload } = req.body;
-  const client = clients[arduino_id];
-  if (client && client.readyState === 1) {
-    // WebSocket.OPEN is 1
-    client.send(JSON.stringify({ payload }));
-    res.status(200).send({ message: "Payload sent successfully" });
-  } else {
-    res.status(404).send({ message: "Arduino not found or not connected" });
-  }
+  const result = sendMessageToClient(arduino_id, payload);
+  res.status(result.status).send({ message: result.message });
 });
 
-export { app, server, clients };
+export { app, server };
