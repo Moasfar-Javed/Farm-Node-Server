@@ -3,7 +3,7 @@ import PatternUtil from "../utility/pattern_util.mjs";
 import CropService from "./crop_service.mjs";
 import NotificationService from "./notification_service.mjs";
 import UserService from "./user_service.mjs";
-import { ObjectId } from "mongodb";
+import { sendMessageToClient } from "../utility/websocket_utility.mjs";
 
 export default class IrrigationService {
   static async connectDatabase(client) {
@@ -26,6 +26,7 @@ export default class IrrigationService {
         release_duration: duration,
         soil_condition: soilCondition,
         water_on: true,
+        manual: false,
         released_on: createdOn,
         created_on: createdOn,
         deleted_on: deletedOn,
@@ -44,6 +45,58 @@ export default class IrrigationService {
         "Water Released",
         `Water for your ${crop.title} has been released and will be turned off automatically after ${duration} minutes`
       );
+
+      const addedReading = await IrrigationDAO.getIrrigationByIDFromDB(
+        addedReadingId
+      );
+
+      return { irrigation: addedReading };
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  static async addManualRelease(token, cropTitle, duration) {
+    try {
+      const user = await UserService.getUserFromToken(token);
+
+      const crop = await CropService.getCropByUserIdAndTitle(
+        user._id,
+        cropTitle
+      );
+
+      if (!crop) {
+        return "No crop exists for the specified name";
+      }
+
+      const createdOn = new Date();
+      const deletedOn = null;
+      const readingDocument = {
+        sensor_id: sensorId,
+        crop_id: crop._id,
+        release_duration: duration,
+        soil_condition: null,
+        water_on: true,
+        manual: true,
+        released_on: createdOn,
+        created_on: createdOn,
+        deleted_on: deletedOn,
+      };
+
+      const addedReadingId = await IrrigationDAO.addReleaseToDB(
+        readingDocument
+      );
+
+      const notification = await NotificationService.sendNotification(
+        user,
+        "open_release",
+        crop._id.toString(),
+        "Water Release Scheduled",
+        `Water for your ${crop.title} will be released shortly and will be turned off automatically after ${duration} minutes`
+      );
+      const result = sendMessageToClient(sensorId.toString(), {
+        duration: releaseDuration,
+      });
 
       const addedReading = await IrrigationDAO.getIrrigationByIDFromDB(
         addedReadingId

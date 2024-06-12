@@ -26,4 +26,31 @@ export default class IrrigationController {
       res.status(500).json({ success: false, data: {}, message: e.message });
     }
   }
+
+  static async apiReleaseIrrigation(req, res, next) {
+    try {
+      let { name } = req.query;
+      let { duration } = req.body;
+      name = decodeURIComponent(name);
+      const token = TokenUtil.cleanToken(req.headers["authorization"]);
+      const serviceResponse = await IrrigationService.addManualRelease(
+        token,
+        name,
+        duration
+      );
+      if (typeof serviceResponse === "string") {
+        res
+          .status(200)
+          .json({ success: false, data: {}, message: serviceResponse });
+      } else {
+        res.status(200).json({
+          success: true,
+          data: serviceResponse,
+          message: "",
+        });
+      }
+    } catch (e) {
+      res.status(500).json({ success: false, data: {}, message: e.message });
+    }
+  }
 }

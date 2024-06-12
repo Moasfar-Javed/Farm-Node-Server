@@ -16,4 +16,12 @@ router
     IrrigationController.apiListIrrigations
   );
 
+router
+  .route(baseRoute + "/manual-release")
+  .post(
+    checkRequiredFieldsMiddleware(["duration"]),
+    checkTokenMiddleware,
+    IrrigationController.apiReleaseIrrigation
+  );
+
 export default router;
