@@ -8,6 +8,7 @@ import readingRoutes from "./routes/reading_route.mjs";
 import predictorRoutes from "./routes/predictor_routes.mjs";
 import irrigationRoutes from "./routes/irrigation_routes.mjs";
 import { createServer } from "http";
+import { sendMessageToClient } from "./utility/websocket_utility.mjs";
 
 const app = express();
 
@@ -25,5 +26,11 @@ app.use(baseUrl, hardwareRoutes);
 app.use(baseUrl, readingRoutes);
 app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
+
+app.post(baseUrl + "/arduino", (req, res) => {
+  const { arduino_id, payload } = req.body;
+  const result = sendMessageToClient(arduino_id, payload);
+  res.status(result.status).send({ message: result.message });
+});
 
 export { app, server };
