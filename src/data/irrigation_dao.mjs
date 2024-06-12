@@ -43,22 +43,40 @@ export default class IrrigationDAO {
     }
   }
 
-    static async updateIrrigationFieldByID(sensorId, fieldsToUpdate) {
-      try {
-        const irrigation = await irrigationcon.updateMany(
-          {
-            sensor_id: sensorId,
-            deleted_on: null,
-          },
-          { $set: fieldsToUpdate }
-        );
+  static async updateIrrigationFieldByID(sensorId, fieldsToUpdate) {
+    try {
+      const irrigation = await irrigationcon.updateMany(
+        {
+          sensor_id: sensorId,
+          deleted_on: null,
+        },
+        { $set: fieldsToUpdate }
+      );
 
-        return irrigation;
-      } catch (e) {
-        console.error(`Unable to update reading field: ${e}`);
-        return null;
-      }
+      return irrigation;
+    } catch (e) {
+      console.error(`Unable to update reading field: ${e}`);
+      return null;
     }
+  }
+
+  static async toggleWaterOff(sensorId, fieldsToUpdate) {
+    try {
+      const irrigation = await irrigationcon.updateOne(
+        {
+          sensor_id: sensorId,
+          deleted_on: null,
+          water_on: true,
+        },
+        { $set: fieldsToUpdate }
+      );
+
+      return irrigation;
+    } catch (e) {
+      console.error(`Unable to update irrigation field: ${e}`);
+      return null;
+    }
+  }
 
   static async getIrrigationListByCrop(cropId) {
     try {

@@ -1,0 +1,1 @@
+{"key":"task_6667f2bed78946ef0e35b5af","value":{"id":"6667f2bed78946ef0e35b5af","datetime":"2024-06-11T06:28:35.736Z","taskFunction":"async (id) => {\n          await PredictorService.requestPrediction(id);\n        }","cronTime":"28 11 * * *"}}

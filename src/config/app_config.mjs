@@ -7,7 +7,7 @@ const appConfig = {
   // Server configuration
   server: {
     port: process.env.PORT || 3030,
-    httpsPort: process.env.HTTPS_PORT || 8000,
+    wsPort: process.env.WS_PORT || 8000,
   },
 
   // JWT configuration

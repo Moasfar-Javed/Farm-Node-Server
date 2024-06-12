@@ -3,6 +3,7 @@ import PatternUtil from "../utility/pattern_util.mjs";
 import CropService from "./crop_service.mjs";
 import NotificationService from "./notification_service.mjs";
 import UserService from "./user_service.mjs";
+import { ObjectId } from "mongodb";
 
 export default class IrrigationService {
   static async connectDatabase(client) {
@@ -13,7 +14,7 @@ export default class IrrigationService {
     }
   }
 
-  static async addRelease(cropId, sensorId, duration) {
+  static async addRelease(cropId, sensorId, duration, soilCondition) {
     try {
       const crop = await CropService.getCropById(cropId);
 
@@ -23,6 +24,8 @@ export default class IrrigationService {
         sensor_id: sensorId,
         crop_id: cropId,
         release_duration: duration,
+        soil_condition: soilCondition,
+        water_on: true,
         released_on: createdOn,
         created_on: createdOn,
         deleted_on: deletedOn,
@@ -106,6 +109,20 @@ export default class IrrigationService {
       return { irrigations: filteredIrrigations };
     } catch (e) {
       return e.message;
+    }
+  }
+
+  static async toggleWaterOff(sensorId) {
+    try {
+      const id = new ObjectId(sensorId);
+      const updateCropResponse = await IrrigationDAO.toggleWaterOff(id, {
+        water_on: false,
+      });
+
+      return true;
+    } catch (e) {
+      console.log(e.message);
+      return false;
     }
   }
 }

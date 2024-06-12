@@ -8,14 +8,14 @@ import readingRoutes from "./routes/reading_route.mjs";
 import predictorRoutes from "./routes/predictor_routes.mjs";
 import irrigationRoutes from "./routes/irrigation_routes.mjs";
 import { createServer } from "http";
-import { sendMessageToClient } from "./utility/websocket_utility.mjs";
+// import { sendMessageToClient } from "./utility/websocket_utility.mjs";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-const server = createServer(app); // Create the HTTP server
+const server = createServer(app); 
 
 const baseUrl = "/api/v1/farm";
 
@@ -27,10 +27,10 @@ app.use(baseUrl, readingRoutes);
 app.use(baseUrl, predictorRoutes);
 app.use(baseUrl, irrigationRoutes);
 
-app.post(baseUrl + "/arduino", (req, res) => {
-  const { arduino_id, payload } = req.body;
-  const result = sendMessageToClient(arduino_id, payload);
-  res.status(result.status).send({ message: result.message });
-});
+// app.post(baseUrl + "/arduino", (req, res) => {
+//   const { arduino_id, payload } = req.body;
+//   const result = sendMessageToClient(arduino_id, payload);
+//   res.status(result.status).send({ message: result.message });
+// });
 
 export { app, server };

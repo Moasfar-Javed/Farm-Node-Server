@@ -1,24 +1,13 @@
 import PredictorService from "../services/predictor_service.mjs";
 import ReadingService from "../services/reading_service.mjs";
+import { ObjectId } from "mongodb";
 
 export default class PredictorController {
   static async apiHandlePredictionResult(req, res, next) {
     try {
-      const {
-        crop_id,
-        next_irrigation,
-        release_duration,
-        health_status,
-        optimal_irrigation,
-      } = req.body;
-
-      const serviceResponse = await PredictorService.handlePrediction(
-        crop_id,
-        next_irrigation,
-        release_duration,
-        health_status,
-        optimal_irrigation
-      );
+      const { crop_id } = req.body;
+      const cropId = new ObjectId(crop_id);
+      const serviceResponse = await PredictorService.requestPrediction(cropId);
       if (typeof serviceResponse === "string") {
         res
           .status(200)

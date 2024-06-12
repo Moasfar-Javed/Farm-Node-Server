@@ -24,8 +24,7 @@ class FirebaseUtility {
 
       return response;
     } catch (error) {
-      console.error("Error sending notification:", error);
-      throw error;
+      return error;
     }
   }
 }

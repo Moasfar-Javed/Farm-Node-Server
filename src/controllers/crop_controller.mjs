@@ -10,6 +10,8 @@ export default class CropController {
         preferred_release_time,
         automatic_irrigation,
         maintain_logs,
+        latitude,
+        longitude,
       } = req.body;
 
       const token = req.headers["authorization"];
@@ -22,7 +24,9 @@ export default class CropController {
         type,
         preferred_release_time,
         automatic_irrigation,
-        maintain_logs
+        maintain_logs,
+        latitude,
+        longitude
       );
       if (typeof serviceResponse === "string") {
         res

@@ -112,4 +112,23 @@ export default class ReadingService {
       return e.message;
     }
   }
+
+  static async listReadingsById(cropId) {
+    try {
+      const readings = await ReadingDAO.getReadingsListByCrop(cropId);
+
+      const filteredReadings = readings.map((crop) => {
+        const filteredReading = PatternUtil.filterParametersFromObject(crop, [
+          "_id",
+          "sensor_id",
+          "crop_id",
+        ]);
+        return filteredReading;
+      });
+
+      return filteredReadings;
+    } catch (e) {
+      return e.message;
+    }
+  }
 }

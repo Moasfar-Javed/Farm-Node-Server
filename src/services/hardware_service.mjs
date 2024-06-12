@@ -4,6 +4,7 @@ import SchedulingUtility from "../utility/scheduling_utility.mjs";
 import TokenUtil from "../utility/token_util.mjs";
 import CropService from "./crop_service.mjs";
 import IrrigationService from "./irrigation_service.mjs";
+import PredictorService from "./predictor_service.mjs";
 import ReadingService from "./reading_service.mjs";
 import UserService from "./user_service.mjs";
 
@@ -73,10 +74,14 @@ export default class HardwareService {
       };
 
       await HardwareDAO.updateSensorFieldByID(sensorId, sensorDocument);
-
-      SchedulingUtility.scheduleTask(crop._id.toString(), formattedTime, () => {
-        //TODO: MAKE THE PREDICTOR REQUEST HERE
-      });
+      const id = crop._id.toString();
+      SchedulingUtility.scheduleTask(
+        id,
+        crop.preferred_release_time,
+        async (id) => {
+          await PredictorService.requestPrediction(id);
+        }
+      );
 
       databaseSensor = await HardwareDAO.getSensorBySensorIDFromDB(sensorId);
 

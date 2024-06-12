@@ -20,7 +20,9 @@ export default class CropService {
     type,
     preferred_release_time,
     automatic_irrigation,
-    maintain_logs
+    maintain_logs,
+    lat,
+    lng
   ) {
     try {
       const typeExists = this._getCropsTypes().includes(type);
@@ -44,10 +46,10 @@ export default class CropService {
         maintain_logs: maintain_logs,
         hardware_paired: false,
         crop_health_status: null,
-        next_irrigation: null,
-        last_irrigation: null,
-        release_duration: null,
+        latitude: lat,
+        longitude: lng,
         created_on: createdOn,
+        last_analyzed_on: deletedOn,
         deleted_on: deletedOn,
       };
 
@@ -214,11 +216,12 @@ export default class CropService {
       );
 
       if (updatedFields.preferred_release_time) {
+        const id = existingCrop._id.toString();
         SchedulingUtility.rescheduleTask(
-          crop._id.toString(),
-          formattedTime,
-          () => {
-            //TODO: MAKE THE PREDICTOR REQUEST HERE
+          id,
+          crop.preferred_release_time,
+          async (id) => {
+            await PredictorService.requestPrediction(id);
           }
         );
       }

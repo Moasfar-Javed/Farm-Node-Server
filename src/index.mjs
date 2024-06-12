@@ -12,7 +12,7 @@ import IrrigationService from "./services/irrigation_service.mjs";
 import { initializeWebSocketServer } from "./utility/websocket_utility.mjs";
 
 const port = appConfig.server.port;
-const wsPort = 8080; // Set the WebSocket server port here
+const wsPort = appConfig.server.wsPort;
 const username = encodeURIComponent(databaseConfig.database.username);
 const password = encodeURIComponent(databaseConfig.database.password);
 const uri = `mongodb://${username}:${password}@${databaseConfig.database.host}:${databaseConfig.database.port}/${databaseConfig.database.dbName}`;
@@ -26,6 +26,9 @@ MongoClient.connect(uri, {
     process.exit(1);
   })
   .then(async (client) => {
+    const date = new Date();
+    date.setMinutes(date.getMinutes() + 2);
+    console.log(date);
     await UserService.connectDatabase(client);
     await CropService.connectDatabase(client);
     await NotificationService.connectDatabase(client);
@@ -33,10 +36,8 @@ MongoClient.connect(uri, {
     await ReadingService.connectDatabase(client);
     await IrrigationService.connectDatabase(client);
     FirebaseUtility.initializeApp();
-
     server.listen(port, () => {
-      console.log(`HTTP server running on port ${port}`);
+      console.log("HTTP server running");
     });
-
     initializeWebSocketServer(wsPort);
   });

@@ -7,16 +7,8 @@ const router = express.Router();
 const baseRoute = "/predictor";
 
 //api routes
-router.route(baseRoute + "/result").post(
-  checkRequiredFieldsMiddleware([
-    "crop_id",
-    "next_irrigation",
-    "release_duration",
-    "health_status",
-    "optimal_irrigation",
-  ]),
-
-  PredictorController.apiHandlePredictionResult
-);
+router
+  .route(baseRoute + "/result")
+  .post(PredictorController.apiHandlePredictionResult);
 
 export default router;
