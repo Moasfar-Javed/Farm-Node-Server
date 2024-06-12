@@ -133,7 +133,7 @@ export default class IrrigationService {
 
   static async toggleWaterOff(sensorId) {
     try {
-      const updateCropResponse = await IrrigationDAO.toggleWaterOff(id, {
+      const updateCropResponse = await IrrigationDAO.toggleWaterOff(sensorId, {
         water_on: false,
       });
 

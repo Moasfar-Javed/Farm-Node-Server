@@ -27,7 +27,7 @@ const initializeWebSocketServer = (wsPort) => {
           );
         }
       } catch (error) {
-        console.error("Error parsing message:", error);
+        console.log("Error parsing message:", error);
       }
     });
   });
@@ -37,7 +37,6 @@ const initializeWebSocketServer = (wsPort) => {
 
 const sendMessageToClient = (arduino_id, payload) => {
   const client = clients[arduino_id];
-  console.log(client);
   console.log(client.readyState);
   if (client && client.readyState === 1) {
     client.send(JSON.stringify({ payload }));
