@@ -102,7 +102,7 @@ export default class IrrigationService {
         `Water for your ${crop.title} will be released shortly and will be turned off automatically after ${duration} minutes`
       );
       const result = sendMessageToClient(sensorId.toString(), {
-        duration: releaseDuration,
+        duration: duration,
       });
 
       const addedReading = await IrrigationDAO.getIrrigationByIDFromDB(
