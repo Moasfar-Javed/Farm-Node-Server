@@ -288,7 +288,11 @@ export default class CropService {
 
       crop.hardware = sensor;
 
-      return { crop: crop, readings: readings, irrigations: irrigations };
+      return {
+        crop: crop,
+        readings: readings,
+        irrigations: irrigations.irrigations,
+      };
     } catch (e) {
       return e.message;
     }
