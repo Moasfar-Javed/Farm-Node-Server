@@ -16,7 +16,7 @@ const initializeWebSocketServer = (wsPort) => {
     ws.on("message", async (message) => {
       try {
         const data = JSON.parse(message);
-        // console.log(data.arduino_id);
+        console.log(data);
         // if (!clients[data.arduino_id]) {
         clients[data.arduino_id] = ws;
         console.log(`Client with arduino_id ${data.arduino_id} connected.`);
