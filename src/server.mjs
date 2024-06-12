@@ -30,7 +30,7 @@ app.use(baseUrl, irrigationRoutes);
 app.post(baseUrl + "/arduino", (req, res) => {
   const { arduino_id, payload } = req.body;
   const result = sendMessageToClient(arduino_id, payload);
-  res.status(result.status).send({ message: result.message });
+  res.status(200).send({ message: result });
 });
 
 export { app, server };
