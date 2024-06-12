@@ -112,6 +112,25 @@ export default class IrrigationService {
     }
   }
 
+  static async listIrrigationsByCropId(cropId) {
+    try {
+      const irrigations = await IrrigationDAO.getIrrigationListByCrop(cropId);
+
+      const filteredIrrigations = irrigations.map((crop) => {
+        const filteredReading = PatternUtil.filterParametersFromObject(crop, [
+          "_id",
+          "sensor_id",
+          "crop_id",
+        ]);
+        return filteredReading;
+      });
+
+      return { irrigations: filteredIrrigations };
+    } catch (e) {
+      return e.message;
+    }
+  }
+
   static async toggleWaterOff(sensorId) {
     try {
       const id = new ObjectId(sensorId);

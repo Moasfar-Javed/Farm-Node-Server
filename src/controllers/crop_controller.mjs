@@ -163,4 +163,28 @@ export default class CropController {
       res.status(500).json({ success: false, data: {}, message: e.message });
     }
   }
+
+  static async apiCropDetail(req, res, next) {
+    try {
+      const token = req.headers["authorization"];
+      let { name } = req.query;
+      name = decodeURIComponent(name);
+      const user = await TokenUtil.getDataFromToken(token);
+
+      const serviceResponse = await CropService.getCropDetails(user._id, name);
+      if (typeof serviceResponse === "string") {
+        res
+          .status(200)
+          .json({ success: false, data: {}, message: serviceResponse });
+      } else {
+        res.status(200).json({
+          success: true,
+          data: serviceResponse,
+          message: "",
+        });
+      }
+    } catch (e) {
+      res.status(500).json({ success: false, data: {}, message: e.message });
+    }
+  }
 }

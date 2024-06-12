@@ -28,7 +28,7 @@ MongoClient.connect(uri, {
   .then(async (client) => {
     const date = new Date();
     date.setMinutes(date.getMinutes() + 2);
-    console.log(date);
+
     await UserService.connectDatabase(client);
     await CropService.connectDatabase(client);
     await NotificationService.connectDatabase(client);

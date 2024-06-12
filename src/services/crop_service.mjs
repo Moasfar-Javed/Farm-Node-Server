@@ -3,6 +3,8 @@ import PatternUtil from "../utility/pattern_util.mjs";
 import SchedulingUtility from "../utility/scheduling_utility.mjs";
 import TokenUtil from "../utility/token_util.mjs";
 import HardwareService from "./hardware_service.mjs";
+import IrrigationService from "./irrigation_service.mjs";
+import ReadingService from "./reading_service.mjs";
 import WeatherService from "./weather_service.mjs";
 
 export default class CropService {
@@ -44,7 +46,6 @@ export default class CropService {
         preferred_release_time: preferred_release_time,
         automatic_irrigation: automatic_irrigation,
         maintain_logs: maintain_logs,
-        hardware_paired: false,
         crop_health_status: null,
         latitude: lat,
         longitude: lng,
@@ -270,6 +271,24 @@ export default class CropService {
       ]);
 
       return filteredCrop;
+    } catch (e) {
+      return e.message;
+    }
+  }
+
+  static async getCropDetails(user_id, title) {
+    try {
+      let crop = await CropDAO.getCropByUserIDAndTitleFromDB(user_id, title);
+
+      const [sensor, readings, irrigations] = await Promise.all([
+        HardwareService.getSensorByCropId(crop._id),
+        ReadingService.listReadingsById(crop._id),
+        IrrigationService.listIrrigationsByCropId(crop._id),
+      ]);
+
+      crop.hardware = sensor;
+
+      return { crop: crop, readings: readings, irrigations: irrigations };
     } catch (e) {
       return e.message;
     }

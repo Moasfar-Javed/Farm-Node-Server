@@ -55,4 +55,12 @@ router
     CropController.apiUpdateCrop
   );
 
+router
+  .route(baseRoute + "/detail")
+  .get(
+    checkRequiredFieldsMiddleware(["name"]),
+    checkTokenMiddleware,
+    CropController.apiCropDetail
+  );
+
 export default router;
