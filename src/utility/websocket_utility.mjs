@@ -11,16 +11,18 @@ const initializeWebSocketServer = (wsPort) => {
     // ws.on("message", (message) => {
     //   const data = JSON.parse(message);
     //   console.log(data.arduino_id);
-    //   clients[data.arduino_id] = ws;
+    //  , "water_on": false
     // });
     ws.on("message", async (message) => {
       try {
         const data = JSON.parse(message);
-        console.log(data.arduino_id);
-        if (!clients[data.arduino_id]) {
-          clients[data.arduino_id] = ws;
-          console.log(`Client with arduino_id ${data.arduino_id} added.`);
-        } else if (data.hasOwnProperty("water_on") && data.water_on === false) {
+        // console.log(data.arduino_id);
+        // if (!clients[data.arduino_id]) {
+        clients[data.arduino_id] = ws;
+        console.log(`Client with arduino_id ${data.arduino_id} connected.`);
+        // }
+
+        if (data.hasOwnProperty("water_on") && data.water_on === false) {
           await IrrigationService.toggleWaterOff(data.arduino_id);
           console.log(
             `Client with arduino_id ${data.arduino_id} has water_on set to off.`
