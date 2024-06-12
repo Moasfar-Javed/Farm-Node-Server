@@ -4,6 +4,7 @@ import CropService from "./crop_service.mjs";
 import NotificationService from "./notification_service.mjs";
 import UserService from "./user_service.mjs";
 import { sendMessageToClient } from "../utility/websocket_utility.mjs";
+import HardwareService from "./hardware_service.mjs";
 
 export default class IrrigationService {
   static async connectDatabase(client) {
@@ -67,6 +68,12 @@ export default class IrrigationService {
 
       if (!crop) {
         return "No crop exists for the specified name";
+      }
+
+      const sensorId = await HardwareService.getSensorByCropId(crop._id);
+
+      if (!sensorId) {
+        return "No hardware associated with this crop/zone";
       }
 
       const createdOn = new Date();
