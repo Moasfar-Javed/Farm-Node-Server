@@ -1,5 +1,6 @@
 import { WebSocketServer } from "ws";
 import IrrigationService from "../services/irrigation_service.mjs";
+import NotificationService from "../services/notification_service.mjs";
 
 const clients = {};
 
