@@ -76,6 +76,14 @@ export default class IrrigationService {
         return "No hardware associated with this crop/zone";
       }
 
+      const notification = await NotificationService.sendNotification(
+        user,
+        "open_release",
+        crop._id.toString(),
+        "Water Release Scheduled",
+        `Water for your ${crop.title} will be released shortly and will be turned off automatically after ${duration} minutes`
+      );
+
       const createdOn = new Date();
       const deletedOn = null;
       const readingDocument = {
@@ -94,16 +102,12 @@ export default class IrrigationService {
         readingDocument
       );
 
-      const notification = await NotificationService.sendNotification(
-        user,
-        "open_release",
-        crop._id.toString(),
-        "Water Release Scheduled",
-        `Water for your ${crop.title} will be released shortly and will be turned off automatically after ${duration} minutes`
-      );
-      const result = sendMessageToClient(sensorId.toString(), {
+      const result = sendMessageToClient(sensorId, {
         duration: duration,
       });
+
+      console.log(result);
+      console.log(duration);
 
       const addedReading = await IrrigationDAO.getIrrigationByIDFromDB(
         addedReadingId
