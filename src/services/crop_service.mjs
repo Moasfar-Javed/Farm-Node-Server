@@ -289,8 +289,11 @@ export default class CropService {
 
       crop.hardware = sensor;
 
+      const isHardwareConnected = checkHardwareConnection(sensor.sensor_id);
+
       return {
         crop: crop,
+        connection: isHardwareConnected,
         readings: readings,
         irrigations: irrigations.irrigations,
       };

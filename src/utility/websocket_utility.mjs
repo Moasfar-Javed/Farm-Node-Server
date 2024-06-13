@@ -53,4 +53,18 @@ const sendMessageToClient = (user, arduino_id, payload) => {
   }
 };
 
-export { initializeWebSocketServer, sendMessageToClient, clients };
+const checkHardwareConnection = (arduino_id) => {
+  const client = clients[arduino_id];
+  if (client && client.readyState === 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+export {
+  initializeWebSocketServer,
+  sendMessageToClient,
+  clients,
+  checkHardwareConnection,
+};
