@@ -205,6 +205,7 @@ export default class CropService {
 
   static async updateCropByUserIdAndTitle(token, title, updatedFields) {
     try {
+      console.log(title);
       const user = await TokenUtil.getDataFromToken(token);
       const existingCrop = await this.getCropByUserIdAndTitle(user._id, title);
 
