@@ -276,7 +276,6 @@ export default class IrrigationService {
           y: hourlyData[index],
         }));
       } else if (filter === "week") {
-        // Group by days of the week
         const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         let weekData = Array(7).fill(0);
 
@@ -292,7 +291,6 @@ export default class IrrigationService {
           y: weekData[index],
         }));
       } else if (filter === "month") {
-        // Group by months
         const months = [
           "Jan",
           "Feb",
@@ -326,8 +324,6 @@ export default class IrrigationService {
         x: x,
         y: y,
         mapped_data: mapped_data,
-        now,
-        irrigations,
       };
     } catch (e) {
       return e.message;
