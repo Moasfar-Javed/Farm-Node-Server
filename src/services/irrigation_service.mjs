@@ -221,7 +221,7 @@ export default class IrrigationService {
         return "No crop exists for the specified name";
       }
 
-      if (!filter && (filter !== "week" || filter !== "month")) {
+      if (!filter) {
         return "Invalid filter";
       }
 
@@ -230,6 +230,12 @@ export default class IrrigationService {
       let filteredIrrigations;
 
       switch (filter) {
+        case "day":
+          filteredIrrigations = irrigations.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_on);
+            return now.toDateString() === irrigationDate.toDateString();
+          });
+          break;
         case "week":
           filteredIrrigations = irrigations.filter((irrigation) => {
             const irrigationDate = new Date(irrigation.created_on);
@@ -254,7 +260,23 @@ export default class IrrigationService {
       let y = [];
       let mapped_data = [];
 
-      if (filter === "week") {
+      if (filter === "day") {
+        const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+        let hourlyData = Array(24).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const hour = new Date(irrigation.created_on).getHours();
+          hourlyData[hour] += irrigation.release_duration;
+        });
+
+        x = hours;
+        y = hourlyData;
+        mapped_data = hours.map((hour, index) => ({
+          x: hour,
+          y: hourlyData[index],
+        }));
+      } else if (filter === "week") {
+        // Group by days of the week
         const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
         let weekData = Array(7).fill(0);
 
@@ -270,6 +292,7 @@ export default class IrrigationService {
           y: weekData[index],
         }));
       } else if (filter === "month") {
+        // Group by months
         const months = [
           "Jan",
           "Feb",
@@ -303,6 +326,8 @@ export default class IrrigationService {
         x: x,
         y: y,
         mapped_data: mapped_data,
+        now,
+        irrigations,
       };
     } catch (e) {
       return e.message;
