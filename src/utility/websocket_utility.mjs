@@ -37,9 +37,9 @@ const sendMessageToClient = (user, arduino_id, payload) => {
         const notification = await NotificationService.sendNotification(
           user,
           "open_release_off",
-          crop._id.toString(),
+          "",
           "Water Turned Off",
-          `Water for your ${crop.title} is turned off, Irrigation lasted ${duration} minutes`
+          `Water for is turned off, Irrigation lasted ${duration} minutes`
         );
       }
       console.log(notification);
