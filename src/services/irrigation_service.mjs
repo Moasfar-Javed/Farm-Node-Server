@@ -212,7 +212,6 @@ export default class IrrigationService {
   static async getGraphDataForIrrigation(token, cropTitle, filter) {
     try {
       const user = await UserService.getUserFromToken(token);
-      console.log(filter);
       const crop = await CropService.getCropByUserIdAndTitle(
         user._id,
         cropTitle
@@ -222,7 +221,7 @@ export default class IrrigationService {
         return "No crop exists for the specified name";
       }
 
-      if (!filter) {
+      if (!filter || filter != "week" || filter != "month") {
         return "Invalid filter";
       }
 
@@ -233,42 +232,77 @@ export default class IrrigationService {
       switch (filter) {
         case "week":
           filteredIrrigations = irrigations.filter((irrigation) => {
-            const irrigationDate = new Date(irrigation.created_at);
+            const irrigationDate = new Date(irrigation.created_on);
             return now - irrigationDate <= 7 * 24 * 60 * 60 * 1000;
           });
           break;
         case "month":
           filteredIrrigations = irrigations.filter((irrigation) => {
-            const irrigationDate = new Date(irrigation.created_at);
+            const irrigationDate = new Date(irrigation.created_on);
             return now - irrigationDate <= 30 * 24 * 60 * 60 * 1000;
-          });
-          break;
-        case "year":
-          filteredIrrigations = irrigations.filter((irrigation) => {
-            const irrigationDate = new Date(irrigation.created_at);
-            return now - irrigationDate <= 365 * 24 * 60 * 60 * 1000;
           });
           break;
         default:
           filteredIrrigations = irrigations;
       }
+
       filteredIrrigations.sort(
-        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+        (a, b) => new Date(a.created_on) - new Date(b.created_on)
       );
 
-      const x = filteredIrrigations.map((irrigation) => irrigation.created_at);
-      const y = filteredIrrigations.map((irrigation) => irrigation.duration);
-      const mapped_data = filteredIrrigations.map((irrigation) => ({
-        x: irrigation.created_at,
-        y: irrigation.duration,
-      }));
+      let x = [];
+      let y = [];
+      let mapped_data = [];
+
+      if (filter === "week") {
+        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        let weekData = Array(7).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const dayIndex = new Date(irrigation.created_on).getDay();
+          weekData[dayIndex] += irrigation.release_duration;
+        });
+
+        x = daysOfWeek;
+        y = weekData;
+        mapped_data = daysOfWeek.map((day, index) => ({
+          x: day,
+          y: weekData[index],
+        }));
+      } else if (filter === "month") {
+        const months = [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        let monthData = Array(12).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const monthIndex = new Date(irrigation.created_on).getMonth();
+          monthData[monthIndex] += irrigation.release_duration;
+        });
+
+        x = months;
+        y = monthData;
+        mapped_data = months.map((month, index) => ({
+          x: month,
+          y: monthData[index],
+        }));
+      }
 
       return {
         x: x,
         y: y,
         mapped_data: mapped_data,
-        now: now,
-        irrigations: irrigations,
       };
     } catch (e) {
       return e.message;
