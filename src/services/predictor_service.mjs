@@ -110,7 +110,7 @@ export default class PredictorService {
     releaseDuration,
     soilCondition
   ) {
-    const result = sendMessageToClient(sensorId.toString(), {
+    const result = sendMessageToClient(user, sensorId.toString(), {
       duration: releaseDuration,
     });
     if (result) {

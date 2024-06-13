@@ -102,7 +102,7 @@ export default class IrrigationService {
         readingDocument
       );
 
-      const result = sendMessageToClient(sensor.sensor_id, {
+      const result = sendMessageToClient(user, sensor.sensor_id, {
         duration: duration,
       });
 

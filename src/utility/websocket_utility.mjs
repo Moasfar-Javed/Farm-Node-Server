@@ -25,12 +25,21 @@ const initializeWebSocketServer = (wsPort) => {
   console.log("WebSocket server running");
 };
 
-const sendMessageToClient = (arduino_id, payload) => {
+const sendMessageToClient = (user, arduino_id, payload) => {
   const client = clients[arduino_id];
   if (client && client.readyState === 1) {
     client.send(JSON.stringify({ payload }));
     setTimeout(async () => {
       await IrrigationService.toggleWaterOff(arduino_id);
+      if (user) {
+        const notification = await NotificationService.sendNotification(
+          user,
+          "open_release_off",
+          crop._id.toString(),
+          "Water Turned Off",
+          `Water for your ${crop.title} is turned off, Irrigation lasted ${duration} minutes`
+        );
+      }
       console.log(
         `Client with arduino_id ${arduino_id} has water_on set to off.`
       );
