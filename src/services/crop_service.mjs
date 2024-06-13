@@ -238,7 +238,7 @@ export default class CropService {
         "user_id",
       ]);
 
-      const sensor = await HardwareService.getSensorByCropId(crop._id);
+      const sensor = await HardwareService.getSensorByCropId(existingCrop._id);
       let filteredSensor = null;
       if (sensor) {
         filteredSensor = PatternUtil.filterParametersFromObject(sensor, [

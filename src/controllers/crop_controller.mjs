@@ -123,7 +123,7 @@ export default class CropController {
       name = decodeURIComponent(name);
       const {
         title,
-        preferred_release_duration,
+        type,
         preferred_release_time,
         automatic_irrigation,
         maintain_logs,
@@ -133,7 +133,7 @@ export default class CropController {
       const updatedFields = Object.fromEntries(
         Object.entries({
           title,
-          preferred_release_duration,
+          type,
           preferred_release_time,
           automatic_irrigation,
           maintain_logs,
