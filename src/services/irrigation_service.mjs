@@ -261,7 +261,7 @@ export default class IrrigationService {
       let mapped_data = [];
 
       if (filter === "day") {
-        const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+        const hours = Array.from({ length: 24 }, (_, i) => i);
         let hourlyData = Array(24).fill(0);
 
         filteredIrrigations.forEach((irrigation) => {
@@ -276,7 +276,7 @@ export default class IrrigationService {
           y: hourlyData[index],
         }));
       } else if (filter === "week") {
-        const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const daysOfWeek = Array.from({ length: 7 }, (_, i) => i);
         let weekData = Array(7).fill(0);
 
         filteredIrrigations.forEach((irrigation) => {
@@ -291,20 +291,7 @@ export default class IrrigationService {
           y: weekData[index],
         }));
       } else if (filter === "month") {
-        const months = [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ];
+        const months = Array.from({ length: 12 }, (_, i) => i);
         let monthData = Array(12).fill(0);
 
         filteredIrrigations.forEach((irrigation) => {
