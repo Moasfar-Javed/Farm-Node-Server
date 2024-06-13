@@ -6,6 +6,7 @@ import HardwareService from "./hardware_service.mjs";
 import IrrigationService from "./irrigation_service.mjs";
 import ReadingService from "./reading_service.mjs";
 import WeatherService from "./weather_service.mjs";
+import { checkHardwareConnection } from "../utility/websocket_utility.mjs";
 
 export default class CropService {
   static async connectDatabase(client) {
@@ -280,6 +281,10 @@ export default class CropService {
   static async getCropDetails(user_id, title) {
     try {
       let crop = await CropDAO.getCropByUserIDAndTitleFromDB(user_id, title);
+
+      if (!crop) {
+        return "No crop/zone found for this name";
+      }
 
       const [sensor, readings, irrigations] = await Promise.all([
         HardwareService.getSensorByCropId(crop._id),
