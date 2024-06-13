@@ -24,4 +24,12 @@ router
     IrrigationController.apiReleaseIrrigation
   );
 
+router
+  .route(baseRoute + "/analytics")
+  .get(
+    checkRequiredFieldsMiddleware(["name", "filter"]),
+    checkTokenMiddleware,
+    IrrigationController.apiIrrigationsAnalytics
+  );
+
 export default router;

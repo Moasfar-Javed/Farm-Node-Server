@@ -208,4 +208,64 @@ export default class IrrigationService {
       return false;
     }
   }
+
+  static async getGraphDataForIrrigation(token, cropTitle, filter) {
+    try {
+      const user = await UserService.getUserFromToken(token);
+
+      const crop = await CropService.getCropByUserIdAndTitle(
+        user._id,
+        cropTitle
+      );
+
+      if (!crop) {
+        return "No crop exists for the specified name";
+      }
+
+      const irrigations = await IrrigationDAO.getIrrigationListByCrop(crop._id);
+      const now = new Date();
+      let filteredIrrigations;
+
+      switch (filter) {
+        case "week":
+          filteredIrrigations = irrigations.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_at);
+            return now - irrigationDate <= 7 * 24 * 60 * 60 * 1000;
+          });
+          break;
+        case "month":
+          filteredIrrigations = irrigations.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_at);
+            return now - irrigationDate <= 30 * 24 * 60 * 60 * 1000;
+          });
+          break;
+        case "year":
+          filteredIrrigations = irrigations.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_at);
+            return now - irrigationDate <= 365 * 24 * 60 * 60 * 1000;
+          });
+          break;
+        default:
+          filteredIrrigations = irrigations;
+      }
+      filteredIrrigations.sort(
+        (a, b) => new Date(a.created_at) - new Date(b.created_at)
+      );
+
+      const x = filteredIrrigations.map((irrigation) => irrigation.created_at);
+      const y = filteredIrrigations.map((irrigation) => irrigation.duration);
+      const mapped_data = filteredIrrigations.map((irrigation) => ({
+        x: irrigation.created_at,
+        y: irrigation.duration,
+      }));
+
+      return {
+        x: x,
+        y: y,
+        mapped_data: mapped_data,
+      };
+    } catch (e) {
+      return e.message;
+    }
+  }
 }
