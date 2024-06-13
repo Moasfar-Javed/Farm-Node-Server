@@ -82,6 +82,7 @@ export default class IrrigationDAO {
     try {
       const irrigations = await irrigationcon
         .find({ crop_id: cropId, deleted_on: null })
+        .sort({ created_on: -1 })
         .toArray();
       return irrigations;
     } catch (e) {

@@ -64,6 +64,7 @@ export default class ReadingDAO {
     try {
       const readings = await readingcon
         .find({ crop_id: cropId, deleted_on: null })
+        .sort({ created_on: -1 })
         .toArray();
       return readings;
     } catch (e) {
