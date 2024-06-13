@@ -195,6 +195,8 @@ export default class CropService {
       const crop = await CropDAO.updateCropFieldByID(user._id, title, {
         deleted_on: deletedOn,
       });
+
+      SchedulingUtility.cancelTask(existingCrop._id.toString());
       return {};
     } catch (e) {
       return e.message;
@@ -220,7 +222,7 @@ export default class CropService {
         const id = existingCrop._id.toString();
         SchedulingUtility.rescheduleTask(
           id,
-          crop.preferred_release_time,
+          existingCrop.preferred_release_time,
           async (id) => {
             await PredictorService.requestPrediction(id);
           }
