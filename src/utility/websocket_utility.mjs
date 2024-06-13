@@ -39,7 +39,7 @@ const sendMessageToClient = (user, arduino_id, payload) => {
           "open_release_off",
           "",
           "Water Turned Off",
-          `Water for is turned off, Irrigation lasted ${duration} minutes`
+          `Water for is turned off, Irrigation lasted ${payload.duration} minutes`
         );
       }
       console.log(notification);
