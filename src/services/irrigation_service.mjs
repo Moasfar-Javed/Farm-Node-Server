@@ -222,6 +222,10 @@ export default class IrrigationService {
         return "No crop exists for the specified name";
       }
 
+      if (!filter) {
+        return "Invalid filter";
+      }
+
       const irrigations = await IrrigationDAO.getIrrigationListByCrop(crop._id);
       const now = new Date();
       let filteredIrrigations;
