@@ -70,9 +70,9 @@ export default class IrrigationService {
         return "No crop exists for the specified name";
       }
 
-      const sensorId = await HardwareService.getSensorByCropId(crop._id);
+      const sensor = await HardwareService.getSensorByCropId(crop._id);
 
-      if (!sensorId) {
+      if (!sensor) {
         return "No hardware associated with this crop/zone";
       }
 
@@ -87,7 +87,7 @@ export default class IrrigationService {
       const createdOn = new Date();
       const deletedOn = null;
       const readingDocument = {
-        sensor_id: sensorId,
+        sensor_id: sensor.sensor_id,
         crop_id: crop._id,
         release_duration: duration,
         soil_condition: null,
@@ -102,13 +102,13 @@ export default class IrrigationService {
         readingDocument
       );
 
-      const result = sendMessageToClient(sensorId, {
+      const result = sendMessageToClient(sensor.sensor_id, {
         duration: duration,
       });
 
-      console.log(sensorId);
-      console.log(result);
-      console.log(duration);
+      // console.log(sensor.sensor_id);
+      // console.log(result);
+      // console.log(duration);
 
       const addedReading = await IrrigationDAO.getIrrigationByIDFromDB(
         addedReadingId
