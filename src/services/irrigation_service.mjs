@@ -263,6 +263,8 @@ export default class IrrigationService {
         x: x,
         y: y,
         mapped_data: mapped_data,
+        now: now,
+        irrigations: irrigations,
       };
     } catch (e) {
       return e.message;
