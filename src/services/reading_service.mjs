@@ -131,4 +131,112 @@ export default class ReadingService {
       return e.message;
     }
   }
+
+  static async getGraphDataForReading(token, cropTitle, filter) {
+    try {
+      const user = await UserService.getUserFromToken(token);
+      const crop = await CropService.getCropByUserIdAndTitle(
+        user._id,
+        cropTitle
+      );
+
+      if (!crop) {
+        return "No crop exists for the specified name";
+      }
+
+      if (!filter) {
+        return "Invalid filter";
+      }
+
+      const readings = await ReadingDAO.getReadingsListByCrop(crop._id);
+      const now = new Date();
+      let filteredIrrigations;
+
+      switch (filter) {
+        case "day":
+          filteredIrrigations = readings.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_on);
+            return now.toDateString() === irrigationDate.toDateString();
+          });
+          break;
+        case "week":
+          filteredIrrigations = readings.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_on);
+            return now - irrigationDate <= 7 * 24 * 60 * 60 * 1000;
+          });
+          break;
+        case "month":
+          filteredIrrigations = readings.filter((irrigation) => {
+            const irrigationDate = new Date(irrigation.created_on);
+            return now - irrigationDate <= 30 * 24 * 60 * 60 * 1000;
+          });
+          break;
+        default:
+          filteredIrrigations = irrigations;
+      }
+
+      filteredIrrigations.sort(
+        (a, b) => new Date(a.created_on) - new Date(b.created_on)
+      );
+
+      let x = [];
+      let y = [];
+      let mapped_data = [];
+
+      if (filter === "day") {
+        const hours = Array.from({ length: 24 }, (_, i) => i);
+        let hourlyData = Array(24).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const hour = new Date(irrigation.created_on).getHours();
+          hourlyData[hour] += irrigation.moisture;
+        });
+
+        x = hours;
+        y = hourlyData;
+        mapped_data = hours.map((hour, index) => ({
+          x: hour,
+          y: hourlyData[index],
+        }));
+      } else if (filter === "week") {
+        const daysOfWeek = Array.from({ length: 7 }, (_, i) => i);
+        let weekData = Array(7).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const dayIndex = new Date(irrigation.created_on).getDay();
+          weekData[dayIndex] += irrigation.moisture;
+        });
+
+        x = daysOfWeek;
+        y = weekData;
+        mapped_data = daysOfWeek.map((day, index) => ({
+          x: day,
+          y: weekData[index],
+        }));
+      } else if (filter === "month") {
+        const months = Array.from({ length: 12 }, (_, i) => i);
+        let monthData = Array(12).fill(0);
+
+        filteredIrrigations.forEach((irrigation) => {
+          const monthIndex = new Date(irrigation.created_on).getMonth();
+          monthData[monthIndex] += irrigation.moisture;
+        });
+
+        x = months;
+        y = monthData;
+        mapped_data = months.map((month, index) => ({
+          x: month,
+          y: monthData[index],
+        }));
+      }
+
+      return {
+        x: x,
+        y: y,
+        mapped_data: mapped_data,
+      };
+    } catch (e) {
+      return e.message;
+    }
+  }
 }

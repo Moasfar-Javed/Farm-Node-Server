@@ -23,4 +23,12 @@ router
     ReadingController.apiListReading
   );
 
+router
+  .route(baseRoute + "/analytics")
+  .get(
+    checkRequiredFieldsMiddleware(["name", "filter"]),
+    checkTokenMiddleware,
+    ReadingController.apiReadingsAnalytics
+  );
+
 export default router;
