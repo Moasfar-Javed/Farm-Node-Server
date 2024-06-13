@@ -106,6 +106,7 @@ export default class IrrigationService {
         duration: duration,
       });
 
+      console.log(sensorId);
       console.log(result);
       console.log(duration);
 
