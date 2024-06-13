@@ -212,7 +212,7 @@ export default class IrrigationService {
   static async getGraphDataForIrrigation(token, cropTitle, filter) {
     try {
       const user = await UserService.getUserFromToken(token);
-
+      console.log(filter);
       const crop = await CropService.getCropByUserIdAndTitle(
         user._id,
         cropTitle
