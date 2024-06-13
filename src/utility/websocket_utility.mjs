@@ -32,7 +32,7 @@ const sendMessageToClient = (user, arduino_id, payload) => {
     client.send(JSON.stringify({ payload }));
     setTimeout(async () => {
       await IrrigationService.toggleWaterOff(arduino_id);
-      console.log(user);
+
       if (user) {
         const notification = await NotificationService.sendNotification(
           user,
@@ -42,7 +42,7 @@ const sendMessageToClient = (user, arduino_id, payload) => {
           `Water for is turned off, Irrigation lasted ${payload.duration} minutes`
         );
       }
-      console.log(notification);
+
       console.log(
         `Client with arduino_id ${arduino_id} has water_on set to off.`
       );

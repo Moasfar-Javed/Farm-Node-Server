@@ -202,8 +202,6 @@ export default class IrrigationService {
         water_on: false,
       });
 
-      console.log(updateCropResponse);
-
       return true;
     } catch (e) {
       console.log(e.message);
