@@ -221,7 +221,7 @@ export default class IrrigationService {
         return "No crop exists for the specified name";
       }
 
-      if (!filter || filter != "week" || filter != "month") {
+      if (!filter && (filter !== "week" || filter !== "month")) {
         return "Invalid filter";
       }
 
