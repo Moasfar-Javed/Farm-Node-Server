@@ -229,9 +229,7 @@ export default class CropService {
         );
       }
 
-      const updatedCrop = await CropDAO.getCropByIDFromDB(
-        updateCropResponse._id
-      );
+      const updatedCrop = await CropDAO.getCropByIDFromDB(existingCrop._id);
 
       const filteredCrop = PatternUtil.filterParametersFromObject(updatedCrop, [
         "_id",
