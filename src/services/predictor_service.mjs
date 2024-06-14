@@ -52,7 +52,7 @@ export default class PredictorService {
       // return response.data;
     }
   }
-E
+  E;
   static async handlePrediction(
     cropId,
     releaseDuration,
@@ -102,7 +102,6 @@ E
       return e.message;
     }
   }
-
   static async releaseWater(
     user,
     cropId,
@@ -110,38 +109,34 @@ E
     releaseDuration,
     soilCondition
   ) {
-    const result = sendMessageToClient(user, sensorId.toString(), {
-      duration: releaseDuration,
-    });
-    if (result) {
-      await IrrigationService.addRelease(
-        cropId,
-        sensorId,
-        releaseDuration,
-        soilCondition
-      );
-    } else {
-      await this.delay(2000);
-      const resultTwo = sendMessageToClient(user, sensorId.toString(), {
+    const maxRetries = 10;
+    const delayTime = 3000;
+
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      const result = sendMessageToClient(user, sensorId.toString(), {
         duration: releaseDuration,
       });
-      if (resultTwo) {
+
+      if (result) {
         await IrrigationService.addRelease(
           cropId,
           sensorId,
           releaseDuration,
           soilCondition
         );
+        return;
       } else {
-        const notification = await NotificationService.sendNotification(
-          user,
-          "open_crop",
-          cropId.toString(),
-          "Hardware Offline",
-          `Time for irrigation but your hardware is offline, please check up on your hardware`
-        );
+        await this.delay(delayTime);
       }
     }
+
+    await NotificationService.sendNotification(
+      user,
+      "open_crop",
+      cropId.toString(),
+      "Hardware Offline",
+      "Time for irrigation but your hardware is offline, please check up on your hardware"
+    );
   }
 
   static delay(ms) {
