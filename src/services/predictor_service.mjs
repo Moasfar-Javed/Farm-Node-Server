@@ -121,13 +121,26 @@ export default class PredictorService {
         soilCondition
       );
     } else {
-      const notification = await NotificationService.sendNotification(
-        user,
-        "open_crop",
-        cropId.toString(),
-        "Hardware Offline",
-        `Time for irrigation but your hardware is offline, please check up on your hardware`
-      );
+      await delay(2000);
+      const resultTwo = sendMessageToClient(user, sensorId.toString(), {
+        duration: releaseDuration,
+      });
+      if (resultTwo) {
+        await IrrigationService.addRelease(
+          cropId,
+          sensorId,
+          releaseDuration,
+          soilCondition
+        );
+      } else {
+        const notification = await NotificationService.sendNotification(
+          user,
+          "open_crop",
+          cropId.toString(),
+          "Hardware Offline",
+          `Time for irrigation but your hardware is offline, please check up on your hardware`
+        );
+      }
     }
   }
 }
