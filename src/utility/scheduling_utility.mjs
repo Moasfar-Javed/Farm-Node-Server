@@ -75,8 +75,8 @@ class SchedulingUtility {
 
     this.scheduledTasks.set(id, job);
     this.taskFunctions.set(id, task);
-    console.log(this.scheduledTasks);
-    console.log(this.taskFunctions);
+    // console.log(this.scheduledTasks);
+    // console.log(this.taskFunctions);
     if (saveToFile) {
       this.saveTaskToStorage(id, datetime, task);
     }

@@ -226,7 +226,7 @@ export default class CropService {
         const id = existingCrop._id.toString();
         SchedulingUtility.rescheduleTask(
           id,
-          existingCrop.preferred_release_time,
+          updatedFields.preferred_release_time,
           async (id) => {
             console.log("prediction requested");
             await PredictorService.requestPrediction(id);
