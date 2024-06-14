@@ -121,7 +121,7 @@ export default class PredictorService {
         soilCondition
       );
     } else {
-      await delay(2000);
+      await this.delay(2000);
       const resultTwo = sendMessageToClient(user, sensorId.toString(), {
         duration: releaseDuration,
       });
@@ -142,5 +142,9 @@ export default class PredictorService {
         );
       }
     }
+  }
+
+  static delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
