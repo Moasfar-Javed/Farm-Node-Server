@@ -62,16 +62,21 @@ class SchedulingUtility {
   }
 
   scheduleTask(id, datetime, task, saveToFile = true) {
+    console.log(this.scheduledTasks.has(id));
     if (this.scheduledTasks.has(id)) {
       this.scheduledTasks.get(id).stop();
     }
 
     const cronTime = this.getCronExpressionFromDateTime(datetime);
 
+    console.log(cronTime);
+
     const job = cron.schedule(cronTime, () => task(id));
+
     this.scheduledTasks.set(id, job);
     this.taskFunctions.set(id, task);
-
+    console.log(scheduledTasks);
+    console.log(taskFunctions);
     if (saveToFile) {
       this.saveTaskToStorage(id, datetime, task);
     }
@@ -90,8 +95,8 @@ class SchedulingUtility {
   }
 
   rescheduleTask(id, datetime, task) {
-    this.scheduleTask(id, datetime, task);
-    console.log(`Task ${id} rescheduled for ${datetime}`);
+    this.scheduleTask(id, datetime, task, true);
+    //console.log(`Task ${id} rescheduled for ${datetime}`);
   }
 
   getCronExpressionFromDateTime(dateTimeString) {
