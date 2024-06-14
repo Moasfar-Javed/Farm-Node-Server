@@ -27,9 +27,6 @@ const initializeWebSocketServer = (wsPort) => {
 };
 
 const sendMessageToClient = (user, arduino_id, payload) => {
-  console.log(user);
-  console.log(arduino_id);
-  console.log(payload);
   const client = clients[arduino_id];
   if (client && client.readyState === 1) {
     client.send(JSON.stringify({ payload }));

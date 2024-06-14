@@ -92,7 +92,7 @@ export default class PredictorService {
       this.releaseWater(
         user,
         cropId,
-        sensor._id,
+        sensor.sensor_id,
         releaseDuration,
         soilCondition
       );
