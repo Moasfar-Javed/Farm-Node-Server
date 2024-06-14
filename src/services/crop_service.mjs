@@ -6,6 +6,8 @@ import HardwareService from "./hardware_service.mjs";
 import IrrigationService from "./irrigation_service.mjs";
 import ReadingService from "./reading_service.mjs";
 import WeatherService from "./weather_service.mjs";
+import PredictorService from "./predictor_service.mjs";
+
 import { checkHardwareConnection } from "../utility/websocket_utility.mjs";
 
 export default class CropService {
@@ -226,6 +228,7 @@ export default class CropService {
           id,
           existingCrop.preferred_release_time,
           async (id) => {
+            console.log("prediction requested");
             await PredictorService.requestPrediction(id);
           }
         );
