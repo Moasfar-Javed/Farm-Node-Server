@@ -45,14 +45,14 @@ export default class PredictorService {
       const soilCondition = response.data.data.soil_type;
       await this.handlePrediction(
         cropId,
-        releaseDuration,
+        Math.ceil(releaseDuration),
         health,
         soilCondition
       );
       // return response.data;
     }
   }
-
+E
   static async handlePrediction(
     cropId,
     releaseDuration,

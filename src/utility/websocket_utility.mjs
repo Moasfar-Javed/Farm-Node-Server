@@ -42,7 +42,6 @@ const sendMessageToClient = (user, arduino_id, payload) => {
           `Water for is turned off, Irrigation lasted ${payload.duration} minutes`
         );
       }
-
       console.log(
         `Client with arduino_id ${arduino_id} has water_on set to off.`
       );
