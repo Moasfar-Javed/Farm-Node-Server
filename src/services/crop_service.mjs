@@ -208,7 +208,7 @@ export default class CropService {
 
   static async updateCropByUserIdAndTitle(token, title, updatedFields) {
     try {
-      console.log(title);
+      // console.log(title);
       const user = await TokenUtil.getDataFromToken(token);
       const existingCrop = await this.getCropByUserIdAndTitle(user._id, title);
 
@@ -228,7 +228,8 @@ export default class CropService {
           id,
           updatedFields.preferred_release_time,
           async (id) => {
-            console.log("prediction requested");
+            console.log("-------------------------------------");
+            console.log("PREDICTION REQUESTED FROM M.L. SERVER");
             await PredictorService.requestPrediction(id);
           }
         );

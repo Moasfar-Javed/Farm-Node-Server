@@ -62,14 +62,14 @@ class SchedulingUtility {
   }
 
   scheduleTask(id, datetime, task, saveToFile = true) {
-    console.log(this.scheduledTasks.has(id));
+    // console.log(this.scheduledTasks.has(id));
     if (this.scheduledTasks.has(id)) {
       this.scheduledTasks.get(id).stop();
     }
 
     const cronTime = this.getCronExpressionFromDateTime(datetime);
 
-    console.log(cronTime);
+    // console.log(cronTime);
 
     const job = cron.schedule(cronTime, () => task(id));
 
@@ -90,7 +90,7 @@ class SchedulingUtility {
       this.taskFunctions.delete(id);
       await this.removeTaskFromStorage(id);
     } else {
-      console.log(`No task with ID ${id} to cancel`);
+      // console.log(`No task with ID ${id} to cancel`);
     }
   }
 

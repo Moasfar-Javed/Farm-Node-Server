@@ -30,7 +30,7 @@ export default class PredictorService {
       readings: readings,
       weather: weather,
     };
-    console.log(params);
+    // console.log(params);
     const response = await axios.post(
       "http://43.204.234.34/predictor/predict",
       params
@@ -38,8 +38,14 @@ export default class PredictorService {
     if (response.status !== 200) {
       console.log(`Predictor Error: ${response.body}`);
     } else {
-      console.log(response.data);
-      console.log(response.data.data);
+      console.log("PREDICTION RECEIVED...");
+      console.log(`CROP ID = ${cropId}`);
+      console.log(`TYPE = ${response.data.data.crop_title}`);
+      console.log(`HEALTH = ${response.data.data.health}`);
+      console.log(`NEEDS = ${response.data.data.predicted_water[0]} LTR/MIN`);
+      console.log(`DURATION = ${response.data.data.release_duration[0]} MINS`);
+      console.log(`SOIL = ${response.data.data.soil_type}`);
+      console.log(`WEATHER = ${response.data.data.weather_condition}`);
       const health = response.data.data.health;
       const releaseDuration = response.data.data.release_duration[0];
       const soilCondition = response.data.data.soil_type;
